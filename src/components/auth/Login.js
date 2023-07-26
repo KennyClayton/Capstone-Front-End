@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
+import CaseTrackerLogo from "./CaseTracker-5000-7-24-2023.png"
 
 //testing how to branch and merge with main and pushing to github
 
@@ -12,7 +13,7 @@ export const Login = () => {
     const handleLogin = (e) => {
         e.preventDefault()
 
-        return fetch(`http://localhost:8080/users?email=${email}`)
+        return fetch(`http://localhost:8080/users?email=${email}`) //look in the user object for an email that matches the one entered by the user when they try to log in...
             .then(res => res.json())
             .then(foundUsers => {
                 if (foundUsers.length === 1) {
@@ -34,7 +35,8 @@ export const Login = () => {
         <main className="container--login">
             <section>
                 <form className="form--login" onSubmit={handleLogin}>
-                    <h1>Case Management System</h1>
+                    {/* <h1>Case Management System</h1> */}
+                    <img src={CaseTrackerLogo} alt="Logo" />
                     <h2>Please sign in</h2>
                     <fieldset>
                         <label htmlFor="inputEmail"> Email address </label>
