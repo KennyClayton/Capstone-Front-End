@@ -12,7 +12,7 @@ export const ApplicationViews = () => {
 					element={
 						<>
 							<h1 className="title--main">CaseTracker 5000</h1>
-							<div>Track Daily. Report <span class="title--main--span">Instantly.</span></div>
+							<div>Track Daily. Report <span className="title--main--span">Instantly.</span></div>
 
 							<Outlet />
 						</>
