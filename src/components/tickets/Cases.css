@@ -1,0 +1,12 @@
+.cases {
+    display: flex;
+    max-width: 800px;
+    flex-direction: column;
+}
+
+.case {
+    background-color: rgb(218, 215, 55);
+    border: 1px solid rgb(83, 67, 67);
+    padding: 0.7rem;
+    margin: .5rem 0;
+}
