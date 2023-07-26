@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
 
+//testing how to branch and merge with main and pushing to github
+
 export const Login = () => {
     const [email, set] = useState("mr.slate@bedrock.com")
     const navigate = useNavigate()
