@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
-import CaseTrackerLogo from "./CaseTracker-5000-7-29-2023.png"
+import CaseTrackerLogo from "./casetracker-5000-7-30-2023 (1).png"
 
 //testing how to branch and merge with main and pushing to github
 

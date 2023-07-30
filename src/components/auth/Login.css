@@ -61,9 +61,9 @@ fieldset {
 }
 
 .sizeDownLogo {
-    width: 70%;
+    width: 55%;
     height: auto;
-    padding: .5rem;
+    padding-top: .5rem;
 }
 
 .case:hover {

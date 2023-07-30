@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import "./Cases.css"
 
 
+ 
 //! PROBLEM - I need to list all of my cases (objects) that are stored in the database (on json server). 
 //^ SOLUTION - Create a function that lists all cases by using react hooks to fetch, capture and update the state of the data (case objects). The function will return JSX of what we want displayed in the browser.
 
