@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
-import CaseTrackerLogo from "./CaseTracker-5000-7-24-2023.png"
+import CaseTrackerLogo from "./CaseTracker-5000-7-29-2023.png"
 
 //testing how to branch and merge with main and pushing to github
 
@@ -36,7 +36,7 @@ export const Login = () => {
             <section>
                 <form className="form--login" onSubmit={handleLogin}>
                     {/* <h1>Case Management System</h1> */}
-                    <img src={CaseTrackerLogo} alt="Logo" />
+                    <img className= "sizeDownLogo" src={CaseTrackerLogo} alt="Logo" />
                     <h2>Please sign in</h2>
                     <fieldset>
                         <label htmlFor="inputEmail"> Email address </label>

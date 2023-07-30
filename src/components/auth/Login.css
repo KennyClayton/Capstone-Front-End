@@ -60,3 +60,12 @@ fieldset {
     bottom: -2rem;
 }
 
+.sizeDownLogo {
+    width: 70%;
+    height: auto;
+    padding: .5rem;
+}
+
+.case:hover {
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.1) inset;
+}

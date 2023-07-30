@@ -1,6 +1,6 @@
 import { Outlet, Route, Routes } from "react-router"
-import { CaseList } from "../tickets/CaseList.js"
-import { CaseSearch } from "../tickets/CaseSearch.js"
+import { CaseList } from "../cases/CaseList.js"
+import { CaseSearch } from "../cases/CaseSearch.js"
 
 
 export const ApplicationViews = () => {
