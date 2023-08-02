@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
 import { useParams } from "react-router-dom"
 
-//~ GOAL OF THIS MODULE - We need to display a "Close Case" button for adjusters so they can see their own cases and close any open cases.
-//~ GOAL OF THIS MODULE - We need to display a single case  
+//~ GOAL OF THIS MODULE - We need to display an individual case when clicked from the CaseList (both managers and adjusters). We also need a "Close Case" button (for adjusters) so they can see their own cases and close any open cases.
+
 
 
 //! PROBLEM - we need a function that will display an individual case and some buttons to be added later.
@@ -28,7 +28,7 @@ export const Case = ({ caseObject, currentUser, adjusters, getAllCases }) => {
     const userAdjuster = adjusters.find(adjuster => adjuster.userId === currentUser.id) // this finds the current user. How? It checks if the userId property of the adjuster object matches the id property of the currentUser object. So we are using the find method on the adjusters array. find method takes a callback function as an argument. From chatGPT: " It's an arrow function that takes an adjuster as an argument and returns a boolean value. The function checks if the userId property of the adjuster object matches the id property of the currentUser object."
     
     
-    const canClose = () => { //this function will determine whether the "Close Case" button should appear for the logged-in user. So we need to compare the currently logged-in user Id (the "userAdjuster" variable in the above code) with the userId of the cases being displayed (ie "assignedAdjuster" in the above code).
+    const canClose = () => { //^this function will determine whether the "Close Case" button should appear for the logged-in user. So we need to compare the currently logged-in user Id (the "userAdjuster" variable in the above code) with the userId of the cases being displayed (ie "assignedAdjuster" in the above code).
         if (userAdjuster?.id === assignedAdjuster?.id && caseObject.dateCaseClosed === "") { //...so if this conditional statement is true, then show this button...the conditional statement reads this way: if the user/adjuster that is currently logged-in (ie - userId: 7) matches the userId of the case's assigned adjuster AND if that case's dateCaseClosed value is an empty string (meaning it does not have a date completed yet, because the case is still open)...THENNNN we can show the "Case Close" button here ... So in short, we want to match each case's uerId to the user/adjuster that is logged in and display the "Close Case" button for that logged-in user's OPEN cases (ie - cases with no date entered into dateCaseClosed value yet). A closed case is one that has a date entered into the dateCaseClosed value...NOT an empty string.
             return <button onClick={closeCase} className="case_close">Close Case</button> //This canClose function returns the ability for a user to click the "Close Case" button.
         } else { //...otherwise ... 
@@ -36,7 +36,7 @@ export const Case = ({ caseObject, currentUser, adjusters, getAllCases }) => {
         }
     }
 
-//!PROBLEM - An adjuster should be able to delete a case with a "Close Case" button
+//!PROBLEM - An adjuster should be able to delete a case with a "Delete Case" button
 //^ SOLUTION - create a deleteButton function with if-else statement so if NOT a manager, then return a delete button...else return an empty string
     const deleteButton = () => { //this function will determine whether the "delete" button should appear for the logged-in user. So we need to compare the currently logged-in user Id (the "userAdjuster" variable in the above code) with the userId of the cases being displayed (ie "assignedAdjuster" in the above code).
         if (!currentUser.isManager) { //...so if the current user is NOT a Manager...
@@ -55,7 +55,8 @@ export const Case = ({ caseObject, currentUser, adjusters, getAllCases }) => {
 
 
 
-    const closeCase = () => { // this function updates the case with a new date completed. So it tells the application what to do when the "Close Case" button above is clicked. Which is what? Well, we want the case to be closed...but what does that mean practically in the application? That means that case/object is moved out of the list of cases. So we'll need an onClick, we'll need to oberserve the State of dateCaseCompleted...anything else?
+    const closeCase = () => { //^ this function updates the case with a new date completed, which is what closes the case.
+        //So it tells the application what to do when the "Close Case" button above is clicked. Which is what? Well, we want the case to be closed...but what does that mean practically in the application? That means that case/object is moved out of the list of cases. So we'll need an onClick, we'll need to oberserve the State of dateCaseCompleted...anything else?
         const copy = { //...we create a copy of the state before we send it to the API (or stringify it)...here we will create a copy as a template
             userId: caseObject.userId,
             caseNumber: caseObject.caseNumber,
@@ -139,13 +140,13 @@ export const Case = ({ caseObject, currentUser, adjusters, getAllCases }) => {
             <header className="case_header">
                 {
                     !currentUser.manager //if the current user is NOT a manager...(ie they are an adjuster)
-                    ? `Case ${caseObject.id}` //then show the Case 3 (or whatever id it has) //! do i need to use caseNumber here to show the case number?
+                    ? `Case ${caseObject.id}` //then show Case 3 (or whatever id it has) //! do i need to use caseNumber here to show the case number?
                     :<Link to={`/cases/${caseObject.id}/edit`}>Case {caseObject.id}</Link> //otherwise, if a Manager, show a Ticket as a link and send it to the edit page
                 }
             </header>
             <section>{caseObject.plaintiffName}</section>
             <section>Reserves Set? {caseObject.reservesSubmitted ? "✅" : "🚨"}</section>
-            {/* <footer className="case_footer"> //! I DON'T THINK I NEED THIS FOOTER SINCE IT 
+            {/* <footer className="case_footer"> //! I DON'T THINK I NEED THIS FOOTER FOR MY PROJECT
                 {
                     caseObject.cases.length
                     ? `Assigned to ${assignedAdjuster !== null ? assignedAdjuster?.users?.fullName : ""}`

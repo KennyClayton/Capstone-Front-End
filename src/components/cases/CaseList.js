@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Cases.css"
 
 
@@ -173,21 +174,25 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
         <button onClick={() => navigate("/case/resources")}>Resources</button>
         </>
       }
-      <h2>List of Cases</h2> 
+      <h2>List of Cases</h2>
       
       <article className="cases">
         { 
-          filteredCases.map( //? do i use cases.map or filteredcases.map?
+          filteredCases.map(
             (case1) => {
-                return <section className="case" key={`case--${case1.id}`}>
-                  <header>Case Number: {case1.caseNumber}</header>
+              //when the Case Number link (below) is clicked, it is routed by the AdjusterViews module to the CaseDetails page for that specific case.
+                return  (    
+                              
+                <section className="case" key={`case--${case1.id}`}>
+                  <h4><Link to={`http://localhost:3000/cases/${case1.id}`}>Case Number: {case1.caseNumber}</Link></h4> 
                   <div>Plaintiff Name: {case1.plaintiffName}</div>
                   <div>Claim Number: {case1.claimNumber}</div>
                   <div>Reserves Submitted?{case1.reservesSubmitted ? "✅" : "🚨" }</div>
                   <div>Adjuster: {case1?.user?.fullName}</div>
                   <div>Case Closed? {case1.dateCaseClosed}</div>
-                </section>
-            }
+                </section>                
+                )  
+          }
           )
         }
       </article>

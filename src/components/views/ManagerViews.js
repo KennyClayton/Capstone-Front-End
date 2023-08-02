@@ -24,7 +24,7 @@ export const ManagerViews = () => {
 				/>
 				
 				<Route path="/cases" element={
-					< CaseContainer /> 
+					< CaseContainer />
 				} //This routes to the "parent component" which is holding two "child components". Why do this? Because the child components can not communicate or interact with one another 
 				/>
 					
