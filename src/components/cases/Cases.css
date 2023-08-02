@@ -24,3 +24,12 @@
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.35) ;
 }
 
+.case_close {
+    margin-left: auto;
+    background-color: chocolate;
+}
+
+.case_delete {
+    margin-left: auto;
+    background-color: indianred;
+}

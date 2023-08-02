@@ -1,0 +1,69 @@
+/* CreateCaseForm.css */
+
+.CreateCaseForm {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0e2cc;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    margin-left: 0;
+    margin-right: 10;
+  }
+  
+  .CreateCaseForm__title {
+    color: #564138;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    color: #564138;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"] {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #564138;
+    border-radius: 5px;
+    width: 95%;
+  }
+  
+  input[type="checkbox"]
+  {
+    padding: px;
+    font-size: 16px;
+    border: 1px solid #564138;
+    border-radius: 5px;
+    width: 5%;
+  }
+
+  button.btn {
+    background-color: #c9a78b;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  button.btn:hover {
+    background-color: #564138;
+  }
+  
+  /* Styling for checkboxes */
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
