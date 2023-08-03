@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
+//trying to learn again how the case object data came into this module. 
+    //Tool 1: useParams gives us the case id number by looking at the url when the case is clicked (ie - on the Case List page, the user clicks a case)
+        //How to use the tool: insert an object with a property of id and make it equal to the useParams hook. This way, the object's variable "id" catches the case id found in the url
+    //Tool 2: 
+
 export const CaseDetails = () => {
     const {id} = useParams()
     const [caseDetails, setCaseDetails] = useState({})
@@ -14,9 +19,9 @@ export const CaseDetails = () => {
             setCaseDetails(casesArray)
         })
     },
-    [id])
+    [id]) //?i think this id changed when the user clicked on the link for the individual case, which triggers this useEffet
 
-    // useEffect(() => {
+    // useEffect(() => { //this is the method from Honey-Rae's to fetch all cases 
     //     fetch(`http://localhost:8080/cases`)
     //     .then(res => res.json())
     //     .then((case1Array) => {

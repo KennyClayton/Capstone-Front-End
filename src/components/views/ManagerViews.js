@@ -1,7 +1,6 @@
 import { CaseList } from "../cases/CaseList.js"
 import { CaseSearch } from "../cases/CaseSearch.js"
 import { CreateCaseForm } from "../cases/CreateCaseForm.js"
-import { Case } from "../cases/Case.js"
 import CaseTrackerLogo from "../auth/casetracker-5000-7-30-2023 (1).png"
 import "./ApplicationViews.css"
 import { CaseContainer } from "../cases/CaseContainer.js"

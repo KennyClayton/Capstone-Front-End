@@ -1,4 +1,3 @@
-import { Case } from "../cases/Case.js"
 import { Outlet, Route, Routes } from "react-router"
 import { CreateCaseForm } from "../cases/CreateCaseForm.js"
 import CaseTrackerLogo from "../auth/casetracker-5000-7-30-2023 (1).png"
