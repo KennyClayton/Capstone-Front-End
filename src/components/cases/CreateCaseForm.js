@@ -8,58 +8,73 @@ export const CreateCaseForm = () => {
         TODO: Add the correct default properties to the
         initial state object
     */
-    const [case1, update] = useState({ //^STEP 1: this useState will take the user's input and run the update function here to give the user-input data to the case1 variable...then... 
+   //^STEP 1: this useState will take the user's input and run the update function here to give the user-input data to the case1 variable...then... 
         //* IMPORTANT: THE UPDATE FUNCTION TO THE LEFT WILL UPDATE CASE1 VARIABLE WITH THE DATA WE PROVIDE BELOW, EXCEPT THE USER'S SELECTIONS REPLACE THE VALUES. So we are giving it the SAME keys in our case objects and the values will be determined by the user.
-        //* When will the update funciton run though and update case1 with the user's info? When the user clicks on the input fields and starts typing or clicking, per the "return"  portion of this whole CreateCaseForm function
+        //* When will the update function run and update case1 with the user's info? When the user clicks on the input fields and starts typing or clicking, per the "return"  portion of this whole CreateCaseForm function
+    const [case1, update] = useState({ 
         caseNumber: "",
-        reservesSubmitted: "",
+        claimEventType: "",
+        claimEventName: "",
+        plaintiffName: "",
+        claimNumber: "",
+        dateOfLossId: "",
+        attorneyId: "",
+        policyType: "",
         IntServedWithComplaint: "",
         RFPServedWithComplaint: "",
         RFAServedWithComplaint: "",
+        dateServed: "",
+        dateRespondedComplaint: "",
+        dateRespondedPlRFP: "",
+        dateRespondedPlRFA: "",
+        dateRespPlRoggs: "",
+        dateDepositionPlCompleted: "",
+        trialDate: "",
+        reservesSubmitted: "",
+        conference50Scheduled: "",
+        conference100Scheduled: "",
+        trialConfScheduled: "",
         notes: "",
         dateCaseClosed: ""
-
-
     })
     /*
-        TODO: Use the useNavigation() hook so you can redirect
-        the user to the case list
+        TODO: Use the useNavigation() hook so you can redirect the user to the case list
     */
     const navigate = useNavigate()
-    const localCaseUser = localStorage.getItem("case_user")
-    const caseUserObject = JSON.parse(localCaseUser)
+    const localCaseUser = localStorage.getItem("case_user") //gets the current user's id
+    const caseUserObject = JSON.parse(localCaseUser) // parses and then stores it as JS-usable object
 
-    //^STEP 2: ...then the case1 variable, which now holds the user's completed form data (as outlined in the above object starting with caseNumber). is used to build another case object to send to the API
-    const handleSaveButtonClick = (event) => { //this function will handle the task of sending the user-input data (which is temp stored in "memory" on the user's computer) to the API for storage. So it needs to know what format or template to use...which we will tell it below (ie - use the case object key-value properties)...
-        //* IMPORTANT: Remember that the userId below should have a value of the current logged-in user. That user Id is brought to us by the localStorage.getItem above.
+    //^STEP 2: ...then the case1 variable, which now holds the user's completed form data (as outlined in the above object) is used to build another case object to send to the API
+    const handleSaveButtonClick = (event) => { //this function will handle the task of sending the user-provided data (which is temp stored in "memory" on the user's computer) and now being held in case1 variable after the user clicked Submit button...that data is now sent to the API for storage. So it needs to know what format or template to use...which we will tell it below (ie - use the case object key-value properties)...
+        //* IMPORTANT: Remember that the userId below should have a value of the current logged-in user. That user Id is brought to us by the localStorage.getItem above, which is stored in caseUserobject....so dot notation starts there for the userId. For all other properties we use dot notations from the case1 variable.
         // TODO: Create the object to be saved to the API
         event.preventDefault()
         const caseToSendToAPI = {
             userId: caseUserObject.id,
             caseNumber: case1.caseNumber,
-            // claimEventType: 1,
-            // claimEventName: 1,
+            claimEventType: case1.claimEventType,
+            claimEventName: case1.claimEventName,
             plaintiffName: case1.plaintiffName,
             claimNumber: case1.claimNumber,
-            // dateOfLossId: 1,
-            // attorneyId: 1,
-            // policyType: 1,
+            dateOfLossId: case1.dateOfLossId,
+            attorneyId: case1.attorneyId,
+            policyType: case1.policyType,
             IntServedWithComplaint: case1.IntServedWithComplaint,
             RFPServedWithComplaint: case1.RFPServedWithComplaint,
             RFAServedWithComplaint: case1.RFAServedWithComplaint,
-            // dateServed: January 1, 2021,
-            // dateRespondedComplaint: January 15, 2021,
-            // dateRespondedPlRFP: January 15, 2021,
-            // dateRespondedPlRFA: January 15, 2021,
-            // dateRespPlRoggs: January 15, 2021,
-            // dateDepositionPlCompleted: April 12, 2021,
-            // trialDate: December 1, 2023,
+            dateServed: case1.dateServed,
+            dateRespondedComplaint: case1.dateRespondedComplaint,
+            dateRespondedPlRFP: case1.dateRespondedPlRFP,
+            dateRespondedPlRFA: case1.dateRespondedPlRFA,
+            dateRespPlRoggs: case1.dateRespPlRoggs,
+            dateDepositionPlCompleted: case1.dateDepositionPlCompleted,
+            trialDate: case1.trialDate,
             reservesSubmitted: case1.reservesSubmitted,
-            // conference50Scheduled: false,
-            // conference100Scheduled: false,
-            // trialConfScheduled: false,
+            conference50Scheduled: case1.conference50Scheduled,
+            conference100Scheduled: case1.conference100Scheduled,
+            trialConfScheduled: case1.trialConfScheduled,
             notes: case1.notes,
-            // dateCaseClosed: case1.dateCaseClosed
+            dateCaseClosed: case1.dateCaseClosed
         }
 
         // TODO: Perform the fetch() to POST the object to the API
@@ -84,6 +99,11 @@ export const CreateCaseForm = () => {
     //     newCase.id = database.cases[lastIndex].id + 1 // this will create the new order id using the next custom order number in line plus 1
     // }
 
+
+   
+
+
+
     return (
         <form className="CreateCaseForm">
 
@@ -104,6 +124,25 @@ export const CreateCaseForm = () => {
                                 update(copy) //...and finally this will send "copy" (which is now the user's input text) as the new state of the case1 variable above. How? With the useState update funciton that gives new data (which is the "copy" variable right here) to the "case1" variable in the above useState. 
                             }
                         } /> <br></br>
+                    <label htmlFor="description">Claim Event Name:</label>
+                    <select
+                        required 
+                        autoFocus
+                        className="form-control"                        
+                        value={case1.claimEventName}
+                        onChange={(evt) => {
+                                const copy = { ...case1 };
+                                copy.claimEventName = evt.target.value;
+                                update(copy);
+                            }}
+                            >
+                                <option value="Hurricane Wendy">Hurricane Wendy</option>
+                                <option value="Hurricane Destructo">Hurricane Destructo</option>
+                    </select>
+                    <br></br>
+
+
+                      
                     <label htmlFor="description">Plaintiff Name:</label>
                     <input
                         required autoFocus
@@ -188,9 +227,42 @@ export const CreateCaseForm = () => {
                                 copy.reservesSubmitted = evt.target.checked //...then, update the "reservesSubmitted" boolean value to true if the user clicks the checkbox.
                                 update(copy) //...then update the "case1" variable above to this "copy" version, which will contain a reservesSubmitted value of "true" if the box was checked by the user.
                             }
+                        } 
+                    /> <br></br>
+
+
+                    <label htmlFor="name">Case Closed? NOTE: "CASE CLOSED" CHECKBOX IS EXPERIMENTAL</label>
+                    <input
+                        type="checkbox"
+                        value={case1.dateCaseClosed}
+                        onChange={
+                            (evt) => {
+                                const copy = { ...case1 } 
+                                copy.dateCaseClosed = evt.target.checked 
+                                update(copy) 
+                            }
+                        } 
+                    /> <br></br>
+
+                    <label htmlFor="description">Case Closed Date</label>
+                    <input
+                        required autoFocus
+                        type="text"
+                        className="form-control"
+                        placeholder="mm/dd/yyyy"
+                        value={case1.dateCaseClosed}
+                        onChange={ 
+                            (evt) => { 
+                                const copy = { ...case1 } 
+                                copy.dateCaseClosed = evt.target.value 
+                                update(copy) 
+                            }
                         } /> <br></br>
-                        <br></br>
-                        <br></br>
+
+
+
+                    <br></br>
+                    <br></br>
 
                     <label htmlFor="description">Notes:</label>
                     <input

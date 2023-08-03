@@ -1,73 +1,89 @@
-import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router"
-
-//trying to learn again how the case object data came into this module. 
-    //Tool 1: useParams gives us the case id number by looking at the url when the case is clicked (ie - on the Case List page, the user clicks a case)
-        //How to use the tool: insert an object with a property of id and make it equal to the useParams hook. This way, the object's variable "id" catches the case id found in the url
-    //Tool 2: 
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import "./CaseDetails.css";
+import { Link } from "react-router-dom";
 
 export const CaseDetails = () => {
-    const {id} = useParams()
-    const [caseDetails, setCaseDetails] = useState({})
-    //const [cases, setCases] = useState([])
-    const navigate = useNavigate()
+  const { caseId } = useParams();
+  const [caseDetails, setCaseDetails] = useState({}); //!this state of caseDetails should ONLY be used for routing to the proper case based on the case primary key that is used at the end of the url. I learned that I cannot use it for getting all of my case data. Why not? Because the case details page, where the related case data is coming from, is limited in what I placed in that case object. I did not include all of the case properties in the cases displayed on the CaseList page. So to fix that issue, I can create another fetch call to get access to the permanent data. //?But what if that information changes? If I fetch case 1 and try to use that data to display here, what if that data changes in the database? will it update on each individual page? Yes! I think so
+  const [eventTypeDetails, setEventTypeDetails] = useState(0); ///eventTypeDetails will hold the id number of whichever case's claimEventType is clicked, per the handleChange function below
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        fetch(`http://localhost:8080/cases/${id}`)
-        .then(res => res.json())
-        .then((casesArray) => {
-            setCaseDetails(casesArray)
-        })
-    },
-    [id]) //?i think this id changed when the user clicked on the link for the individual case, which triggers this useEffet
+  //the reason I am using a useEffect to fetch this data instead of just a function is because the url will be different each time. So we need to watch that id every time a click happens to see if the id changes to another case id. That is what routes us to the proper case page. 
+  useEffect(() => {
+    fetch(`http://localhost:8080/cases/${caseId}`)
+      .then((res) => res.json())
+      .then((casesArray) => {
+        setCaseDetails(casesArray);
+      });
+  }, [caseId]);
 
-    // useEffect(() => { //this is the method from Honey-Rae's to fetch all cases 
-    //     fetch(`http://localhost:8080/cases`)
-    //     .then(res => res.json())
-    //     .then((case1Array) => {
-    //         setCases(case1Array)
-    //     })
-    // },
-    // []
-    // )
+  
+
+  const handleCaseDelete = (caseId) => {
+    fetch(`http://localhost:8080/cases/${caseId}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => {
+        navigate("/cases");
+      });
+  };
+
+  
+   // Handle "Edit Case" button click
+   const handleEditButtonClick = () => {
+    navigate(`/case/${caseId}/edit`); // Replace `/cases/${id}/edit` with the correct path to your CaseEdit.js component
+  };
 
 
-
-    // const deleteButton = () => { //this function will determine whether the "delete" button should appear for the logged-in user. So we need to compare the currently logged-in user Id (the "userAdjuster" variable in the above code) with the userId of the cases being displayed (ie "assignedAdjuster" in the above code).
-    //     if (!currentUser.isManager) { //...so if the current user is NOT a Manager...
-    //         return <button onClick={() => {//...the onClick should run a function that fetches with a DELETE method
-    //             fetch(`http://localhost:8080/cases/${id}`, {
-    //                 method: "DELETE" //use the delete method on this fetch call
-    //             })
-    //                 .then(() => {
-    //                     getAllCases() //...then bring back down from json server, all the cases NOW listed after we just deleted one.
-    //                 })
-    //         }} className="case_close">Delete Case</button> //This canClose function returns the ability for a user to click the "Close Case" button.
-    //     } else { //...otherwise ... 
-    //         return "" //...if there is a date entered as a value in dateCaseClosed property, then DON'T display this button on the web page...just show an empty string instead.
-    //     }
-    // }
-
-    const handleCaseDelete = (caseId) => {
-        fetch(`http://localhost:8080/cases/${caseId}`, {
-            method: "DELETE",
-        })
-        .then(res => res.json())
-        .then(() => {
-            navigate("/cases")
-        })
+  const handleChange = (event) => { //this function is looking at the jsx under Case Details, the second div...this function grabs the claimEvent id of the clicked case
+    if (event.target.id === "claimEventType") { //if the clicked id has claimEventType as its id value...
+      setEventTypeDetails(parseInt(event.target.value));//...then run setEventTypeDetails function which will replace eventTypeDetails value above with that clicked id (this is replacing the eventTypeDetails variable above with the clicked case id's claimEventType value ... why? so we can use that particular case object property somewhere else in this code by referencing the variable now)
     }
-
-    return (
-        <div>
-            <h1>Case Details</h1>
-            <p>Case Number: {caseDetails.caseNumber}</p>
-            <p>Claim Event Type: {caseDetails.claimEventType}</p>
-            <button onClick={() => handleCaseDelete(caseDetails.id)}>
-            Delete Case</button>
+  };
+//!PROBLEM: I need a dropdown for claimEventType that will show the two types I have available to the user to choose.
+//^SOLUTION: "To generate the dropdown options dynamically based on the data from the database, you can map through the claimEvent array and create the <option> elements using the type and id properties."
+  return (
+    <>
+    <div>
+      <h2>Case Details</h2>
+        <div>Case Number:{caseDetails.caseNumber}</div>
+        <div>Claim Event Name: {caseDetails.claimEventName}</div>
+        <div>Plaintiff Name: {caseDetails.plaintiffName}</div>
+        <div>Claim Number: {caseDetails.claimNumber}</div>
+        <div>dateOfLossId: {caseDetails.dateOfLossId}</div>
+        <div>attorneyId: {caseDetails.attorneyId}</div>
+        <div>policyType: {caseDetails.policyType}</div>
+        <div>IntServedWithComplaint: {caseDetails.IntServedWithComplaint}</div>
+        <div>RFPServedWithComplaint: {caseDetails.RFPServedWithComplaint}</div>
+        <div>RFAServedWithComplaint: {caseDetails.RFAServedWithComplaint}</div>
+        <div>dateServed: {caseDetails.dateServed}</div>
+        <div>dateRespondedComplaint: {caseDetails.dateRespondedComplaint}</div>
+        <div>dateRespondedPlRFP: {caseDetails.dateRespondedPlRFP}</div>
+        <div>dateRespondedPlRFA: {caseDetails.dateRespondedPlRFA}</div>
+        <div>dateRespPlRoggs: {caseDetails.dateRespPlRoggs}</div>
+        <div>dateDepositionPlCompleted: {caseDetails.dateDepositionPlCompleted}</div>
+        <div>trialDate: {caseDetails.trialDate}</div>
+        <div>reservesSubmitted: {caseDetails.reservesSubmitted}</div>
+        <div>conference50Scheduled: {caseDetails.conference50Scheduled}</div>
+        <div>conference100Scheduled: {caseDetails.conference100Scheduled}</div>
+        <div>trialConfScheduled: {caseDetails.trialConfScheduled}</div>
+        <div>notes: {caseDetails.notes}</div>
+        <div>dateCaseClosed: {caseDetails.dateCaseClosed}</div>
+        <br></br>
         </div>
-    
+        
+        <div>
+        <button onClick={() => handleCaseDelete(caseDetails.id)}>
+            Delete Case
+        </button>
+        
+        <button onClick={handleEditButtonClick}>
+            Edit Case
+        </button>
+        </div>
 
-
-    )
-}
+        </>
+  );
+};

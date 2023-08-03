@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Cases.css"
+import "./CreateCaseForm.css"
 
 
  
@@ -123,7 +124,7 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
       () => {
         if (closedCasesOnly) {
           const closedCaseArray = cases.filter(case1 => {
-            return case1.userId === caseUserObject.id && case1.dateCaseClosed !== "" //this says return all cases for the current user AND where the dateCaseClosed property does NOT have an empty string (ie - if a date is placed in that value field then it's a closed case....so when we click closed cases button those are the cases that will sho)
+            return case1.userId === caseUserObject.id && case1.dateCaseClosed !== "" //this says return all cases for the current user AND where the dateCaseClosed property does NOT have an empty string (ie - if a date is placed in that value field then it's a closed case....so when we click closed cases button those are the cases that will show)
           })
           setFilteredCases(closedCaseArray) // set the closedCasesOnly variable to show only those cases that are closed
         }
@@ -165,13 +166,16 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
         </>
         :
         <>
-        <button onClick={() => navigate("/case/create")}>Create New Case</button>
-        {/* Below, I want to show ONLY completed cases for th elogged-in adjuster. I need to learn how to complete a case. Then this should show up. */}
-        {/* <button onClick={() => navigate("/case/create")}>Close this case 💼 </button> */}
-        <button onClick={() => setClosedCasesOnly(true)}>Closed Cases</button>
+        <button onClick={() => navigate("/case/create")}className="new-case-button">Create New Case</button>
+        <br></br>
+        <br></br>
+        <div>
+        <button onClick={() => setClosedCasesOnly(false)}>My Open Cases</button>   
+        <button onClick={() => setClosedCasesOnly(true)}>My Closed Cases</button>        
         <button onClick={() => setClosedCasesOnly(false)}>All My Cases</button>
-        <button onClick={() => navigate("/case/contact")}>Contacts</button>
-        <button onClick={() => navigate("/case/resources")}>Resources</button>
+        </div>
+        {/* <button onClick={() => navigate("/case/contact")}>Contacts</button>
+        <button onClick={() => navigate("/case/resources")}>Resources</button> */}
         </>
       }
       <h2>List of Cases</h2>

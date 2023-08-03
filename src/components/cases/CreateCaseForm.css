@@ -47,7 +47,7 @@
   }
 
   button.btn {
-    background-color: #c9a78b;
+    background-color: #7D3D09;
     color: #ffffff;
     border: none;
     padding: 10px 20px;
@@ -67,3 +67,15 @@
     margin-right: 5px;
   }
   
+  .new-case-button {
+    background-color: #7D3D09;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer ; 
+}
+
+.new-case-button:hover {
+  box-shadow: 6px 6px 10px #564138 inset;
+  }

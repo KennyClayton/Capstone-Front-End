@@ -4,6 +4,7 @@ import CaseTrackerLogo from "../auth/casetracker-5000-7-30-2023 (1).png"
 import "./ApplicationViews.css"
 import { CaseContainer } from "../cases/CaseContainer.js"
 import { CaseDetails } from "../cases/CaseDetails.js"
+import { CaseEdit } from "../cases/CaseEdit.js"
 
 // This module basically says, "Hey Browser, here are the only places (url's) where the user can go. So if the user clicks on anything with a url that matches one of my url's below, I will display that url for the user." So if a user is interacting with the list of cases, and clicks on a button there that "navigates" to a url matching one of these below, then this ApplicationViews functino will run and send the user's browser to that url. In short, it "watches the browser URL and displays the correct component". 
 export const AdjusterViews = () => {
@@ -37,11 +38,20 @@ export const AdjusterViews = () => {
 					</>
 				} 
 				/>
-				<Route path="/cases/:id" element={	
+				<Route path="/cases/:caseId" element={	
 					<>
 					<img className="sizeDownLogo" src={CaseTrackerLogo} alt="Logo" />
 					<div className="subtitle-casetracker5000">Track Daily. Report <span className="title--main--span">Instantly.</span></div>
 					<CaseDetails />
+					</>
+				} 
+				/>
+
+				<Route path="/case/:caseId/edit" element={	
+					<>
+					<img className="sizeDownLogo" src={CaseTrackerLogo} alt="Logo" />
+					<div className="subtitle-casetracker5000">Track Daily. Report <span className="title--main--span">Instantly.</span></div>
+					<CaseEdit />
 					</>
 				} 
 				/>
