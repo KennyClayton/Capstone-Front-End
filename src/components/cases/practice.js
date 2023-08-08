@@ -3,3 +3,14 @@ const localCaseUser = localStorage.getItem("case_user") //^ this gets the user o
   const caseUserObject = JSON.parse(localCaseUser) //* Now we parse the browser-provided data into JS-usable data (an object)
 
   console.log(caseUserObject)
+
+
+const grabSelectedAdjuster = () => {
+  if (caseUserObject.id === theclickedId ) {
+    setAdjusters(adjusters)
+  }
+  return ""
+}
+
+
+

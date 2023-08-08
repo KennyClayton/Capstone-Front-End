@@ -11,18 +11,20 @@ import "./CreateCaseForm.css"
 
 export const CaseList = ({ searchTermState }) => { //initially set the "cases" variable below as an empty array. How? "useState([])". Why? Because we will pull in some data (using a fetch call to our json server) and fill up that empty array into the "cases" variable. Once that fetch occurs, the "cases" variable will hold all of my "case" objects (ie - my list of cases). Furhter down in the code we will update our "cases" variable by calling the "setCases" function inside of a useEffect() hook. More on that later though.
   //*IMPORTANT - we don't want to have the user changing the value of "cases" here below because we need the COMPLETE and ORIGINAL set of cases from our database...a clean copy of all cases...to reference at different times in future code. So that is why we created filteredCases below cases...so we do useEffects on the filteredCases AND we can still reference all the original cases.
-  //^STATE 1
+  //^STATE 1 BELOW
   const [cases, setCases] = useState([]); // so, again, the "cases" on this line has an initial value of an empty array at the moment...
-  //^STATE 2
+  //^STATE 2 BELOW
   const [filteredCases, setFilteredCases] = useState([]); // so we do NOT want to modify the array of cases we got from the API (above), but we want to use the data still. We will load up the empty filteredCases variable with the logged-in user's cases ONLY. How? We set up another useEffect below with if/else statement to see if a manager or non-manager logged in...then display that user's cases only.
-  //^STATE 3
+  //^STATE 3 BELOW
   const [myCases, setMyCases] = useState([])
-  //^STATE 4
+  //^STATE 4 BELOW
   const [reservesSubmitted, setReservesSubmitted] = useState(false) //this sets the value of reservesSubmitted to "null" initally...
-  //^STATE 5
+  //^STATE 5 BELOW
   const [closedCasesOnly, setClosedCasesOnly] = useState(null) //I need "closedCasesOnly" to contain closed cases. 
-  //^STATE 6
+  //^STATE 6 BELOW
   const [selectedAdjusterId, setSelectedAdjusterId] = useState("")
+  const [adjusters, setAdjusters] = useState([])
+  
   const navigate = useNavigate()
 
 
@@ -67,6 +69,15 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
         .then(response => response.json()) // this takes the json text and "parses" it back into readable JS objects so it's usable data for me
         .then((caseArray) => { //then we set a parameter to hold the NEW data (ie our case objects)...when does that parameter take an argument? Right now on the next line...
           setCases(caseArray) //...and here is where we feed the caseArray parameter its argument by saying "set these cases (that we fetched 3 lines above) as the new value of our "cases" variable on line 7". 
+          console.log(caseArray)
+        })
+
+        fetch(`http://localhost:8080/adjusters?_expand=user`) //we added the adjuster object for each user here
+        .then(response => response.json())
+        .then((data) => {
+          const adjusterArray = data.filter(case1 => !case1.user.isManager); //this gives us an array of adjuster only, no managers
+          setAdjusters(adjusterArray)
+          console.log(adjusterArray)
         })
     },
     []
@@ -146,6 +157,14 @@ useEffect(() => {
 }, [selectedAdjusterId, cases]);
 
 
+// for the onChange below
+const handleFilterCases = (e) => {
+  const c = cases.filter((case1) => {              
+    return case1.userId === parseInt(e.target.value)
+  })
+  setFilteredCases(c)
+}
+console.log(filteredCases, "filteredCases")
 
   useEffect( //...while observing closedCasesOnly, if there is any user input that changes the value of closedCasesOnly, 
     () => {
@@ -188,26 +207,28 @@ useEffect(() => {
     { //below says if the logged-in user is a manager, then display these two buttons and call the setReservesSubmitted function. The "No Reserves Yet" button displays all cases where the boolean is false (ie, whether reservesSubmitted value is false)...and "Show All Cases" button displays all cases
       caseUserObject.manager 
         ? <>
-        {caseUserObject.manager && (
-          <select 
-            value={selectedAdjusterId}
-            onChange={(e) => setSelectedAdjusterId(e.target.value)}
-            >
-            <option value="">All Adjusters</option>
-            {cases.map((case1) => (
-              <option key={case1.id} value={case1.userId}>
-                {case1.user.fullName}
-              </option>
+        {
+          // <select value={selectedAdjusterId} onChange={(e) => setSelectedAdjusterId(e.target.value)}>
+          // what does it do setting defaultValue to default? the defaultValue is an ATTRIBUTE. It is used to set a default value for an input element or a component. In this case we are using defaultValue on a select element. When you use defaultValue="default" on an input element (including a select element i think), it means that the initial value of the input will be set to "default" when the component is rendered.
+          <select defaultValue="default"
+          onChange={ handleFilterCases }
+          >
+            <option value="default" hidden>All Adjusters</option>
+            {adjusters.map((case1) => ( //for each case, render an option that displays the full name associated with that case
+               (<option key={case1.id} value={case1.userId}>
+                    {case1.user.fullName}
+                </option>)
             ))}
           </select>
-          )
         }
           {/* <button onClick={() => setReservesSubmitted (false)} >Reserves Incomplete</button> */}
           <button onClick={() => setReservesSubmitted(prevState => !prevState)}>Toggle Reserves</button>
           {/* <button onClick={() => handleButtonClick}>All Reserves</button> */}
           <button onClick={() => setFilteredCases(cases)} >All Adjusters' Cases</button>
         </>
+
         :
+
         <>
           <button onClick={() => navigate("/case/create")} className="new-case-button">Create New Case</button>
           <br></br>
