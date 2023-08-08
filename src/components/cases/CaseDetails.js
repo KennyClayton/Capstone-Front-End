@@ -37,6 +37,12 @@ export const CaseDetails = () => {
   };
 
 
+// Handle "Edit Case" button click
+const handleGoBackButtonClick = () => {
+  navigate(`/cases`); // navigates back to the list of cases for the current user.
+};
+
+
   const handleChange = (event) => { //this function is looking at the jsx under Case Details, the second div...this function grabs the claimEvent id of the clicked case
     if (event.target.id === "claimEventType") { //if the clicked id has claimEventType as its id value...
       setEventTypeDetails(parseInt(event.target.value));//...then run setEventTypeDetails function which will replace eventTypeDetails value above with that clicked id (this is replacing the eventTypeDetails variable above with the clicked case id's claimEventType value ... why? so we can use that particular case object property somewhere else in this code by referencing the variable now)
@@ -81,6 +87,9 @@ export const CaseDetails = () => {
         
         <button onClick={handleEditButtonClick}>
             Edit Case
+        </button>
+        <button onClick={handleGoBackButtonClick}>
+            Back to My Cases
         </button>
         </div>
 

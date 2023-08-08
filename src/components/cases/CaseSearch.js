@@ -8,7 +8,9 @@ export const CaseSearch = ({setterFunction}) => {
                     setterFunction(changeEvent.target.value)
                 }
             }
-        type="text" placeholder="Search by Plaintiff Name..." />
+        type="text" placeholder="Search by Plaintiff Name..." 
+        style={{ maxWidth: '450px' }}
+        />
         </div>
     )
 }
