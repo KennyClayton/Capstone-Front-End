@@ -4,13 +4,14 @@ import { useNavigate, useParams } from "react-router-dom"
 export const CaseEdit = () => {
     const [case1, setCase1] = useState({
         notes: "",
-        reservesSubmitted: null
+        reservesSubmitted: null,
+        dateCaseClosed: ""
     })
-    
-    const { id } = useParams()    
+
+    const { id } = useParams()
     const { caseId } = useParams()
     const navigate = useNavigate()
-    
+
     useEffect(() => {
         fetch(`http://localhost:8080/cases/${caseId}`) //this retrives case 94 (or whatever case id)
             .then(response => response.json())
@@ -35,6 +36,13 @@ export const CaseEdit = () => {
                 // window.history.back() //!we want the user to go back to the specific case after the case is updated...is this syntax right?
             })
     }
+
+    const handleCancelButtonClick = (event) => {
+        event.preventDefault()
+
+        navigate(-1); // This navigates back to the previous page
+    };
+
 
 
     return <form className="caseForm">
@@ -72,11 +80,49 @@ export const CaseEdit = () => {
                         }
                     } />
             </div>
+
+            <div>
+                <label htmlFor="name">Case Closed?</label>
+                <input
+                    type="checkbox"
+                    value={case1.dateCaseClosed}
+                    onChange={
+                        (evt) => {
+                            const copy = { ...case1 }
+                            copy.dateCaseClosed = evt.target.checked
+                            setCase1(copy)
+                        }
+                    }
+                />
+                <label htmlFor="description">Case Closed Date</label>
+                    <input
+                        required autoFocus
+                        type="text"
+                        className="form-control"
+                        placeholder="mm/dd/yyyy"
+                        value={case1.dateCaseClosed}
+                        onChange={ 
+                            (evt) => { 
+                                const copy = { ...case1 } 
+                                copy.dateCaseClosed = evt.target.value 
+                                setCase1(copy) 
+                            }
+                        }
+                        />
+            </div>
+
         </fieldset>
-        <button
-            onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
-            className="btn btn-primary">
-            Save Edits
-        </button>
+        <div className="case_edit_buttons">
+            <button
+                onClick={(clickEvent) => handleSaveButtonClick(clickEvent)}
+                className="btn btn-primary">
+                Save Edits
+            </button>
+            <button
+                onClick={handleCancelButtonClick}
+                className="btn btn-secondary">
+                Cancel
+            </button>
+        </div>
     </form>
 }

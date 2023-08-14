@@ -5,12 +5,32 @@ const localCaseUser = localStorage.getItem("case_user") //^ this gets the user o
   console.log(caseUserObject)
 
 
-const grabSelectedAdjuster = () => {
-  if (caseUserObject.id === theclickedId ) {
-    setAdjusters(adjusters)
-  }
-  return ""
+
+
+
+  const handleReassignAdjuster = (newUserId, e) => { //chatGPT: "It takes two arguments: newUserId, which is the ID of the new adjuster being assigned, and e, which is the event object from the <select> element's onChange event."
+    // when the adjuster name is selected from the dropdown, the case's userId should change to the current user's Id
+    const updatedCases = cases.map((case1) => { //this function does two things: 1. it maps over and performs a function for each case that 
+      if (case1.userId === parseInt(e.target.value)) {
+        // Update the case on the server using the PATCH method
+        // return { ...case1, userId: newUserId, }; //...then take that case and create a new case object and update the userId value to the clicked adjuster's userId value...
+      
+      console.log(e.target.value)
+      fetch(`http://localhost:3000/cases/${case1.id}`, {
+        method: 'PATCH',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: newUserId,
+        })
+      })
+        .then(response => response.json())
+        .then((json) => console.log(json));
+        return { ...case1, userId: newUserId }; // Update the userId in the case locally
+    }
+
+    return case1; //otherwise, if the statement above is false, just return the cases untouched
+  });
+    setFilteredCases(updatedCases)
 }
-
-
-

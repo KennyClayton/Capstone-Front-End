@@ -79,3 +79,10 @@
 .new-case-button:hover {
   box-shadow: 6px 6px 10px #564138 inset;
   }
+
+.case_edit_buttons {
+  display: flex; /* Display buttons horizontally */
+  gap: 10px; /* Gap between buttons */
+  margin-top: 10px; /* Add space between the form fields and buttons */
+  justify-content: flex-start; /* Align buttons to the start of the container */
+}

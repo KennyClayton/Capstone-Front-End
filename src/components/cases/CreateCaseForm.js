@@ -228,39 +228,8 @@ export const CreateCaseForm = () => {
                                 update(copy) //...then update the "case1" variable above to this "copy" version, which will contain a reservesSubmitted value of "true" if the box was checked by the user.
                             }
                         } 
-                    /> <br></br>
-
-
-                    <label htmlFor="name">Case Closed? NOTE: "CASE CLOSED" CHECKBOX IS EXPERIMENTAL</label>
-                    <input
-                        type="checkbox"
-                        value={case1.dateCaseClosed}
-                        onChange={
-                            (evt) => {
-                                const copy = { ...case1 } 
-                                copy.dateCaseClosed = evt.target.checked 
-                                update(copy) 
-                            }
-                        } 
-                    /> <br></br>
-
-                    <label htmlFor="description">Case Closed Date</label>
-                    <input
-                        required autoFocus
-                        type="text"
-                        className="form-control"
-                        placeholder="mm/dd/yyyy"
-                        value={case1.dateCaseClosed}
-                        onChange={ 
-                            (evt) => { 
-                                const copy = { ...case1 } 
-                                copy.dateCaseClosed = evt.target.value 
-                                update(copy) 
-                            }
-                        } /> <br></br>
-
-
-
+                    /> 
+                    <br></br>
                     <br></br>
                     <br></br>
 

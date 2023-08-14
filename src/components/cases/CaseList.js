@@ -24,7 +24,7 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
   //^STATE 6 BELOW
   const [selectedAdjusterId, setSelectedAdjusterId] = useState("")
   const [adjusters, setAdjusters] = useState([])
-  
+
   const navigate = useNavigate()
 
 
@@ -36,7 +36,7 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
   const localCaseUser = localStorage.getItem("case_user") //^ this gets the user object from localStorage
   //Which user object? The user that is logged in. That user object is stored in localCaseUser variable on this code. I am setting it globally on this function so I can access it in my return statement further down in this function. //*"Hey browser, note which user is logged in by looking at the case_user info and giving me the logged-in user's "id" and their "manger" boolean value of true or false
   const caseUserObject = JSON.parse(localCaseUser) //* Now we parse the browser-provided data into JS-usable data (an object)
-
+  // console.log(caseUserObject.id)
 
 
 
@@ -57,7 +57,22 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
 
 
 
+  const getCasesAndAdjusters = () => {
+      fetch('http://localhost:8080/cases?_expand=user') // this grabs the case objects (and expanded to include the user objects) from the cases array that is stored on the json server)
+        .then(response => response.json()) // this takes the json text and "parses" it back into readable JS objects so it's usable data for me
+        .then((caseArray) => { //then we set a parameter to hold the NEW data (ie our case objects)...when does that parameter take an argument? Right now on the next line...
+          setCases(caseArray) //...and here is where we feed the caseArray parameter its argument by saying "set these cases (that we fetched 3 lines above) as the new value of our "cases" variable on line 7". 
+          // console.log(caseArray)
+        })
 
+      fetch(`http://localhost:8080/adjusters?_expand=user`) //we added the adjuster object for each user here
+        .then(response => response.json())
+        .then((data) => {
+          const adjusterArray = data.filter(case1 => !case1.user.isManager); //this gives us an array of adjuster only, no managers
+          setAdjusters(adjusterArray)
+          // console.log(adjusterArray)
+        })
+    }
 
 
   //! PROBLEM - Current state of my "cases" is an empty array. How do I update it to the array of case objects?
@@ -65,20 +80,7 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
 
   useEffect( //recall that useEffect purpose is to observe state (initial state is being observed when array is empty...then we can target specific state variables and do something every time it changes. How? with another useEffect)
     () => {
-      fetch('http://localhost:8080/cases?_expand=user') // this grabs the case objects (and expanded to include the user objects) from the cases array that is stored on the json server)
-        .then(response => response.json()) // this takes the json text and "parses" it back into readable JS objects so it's usable data for me
-        .then((caseArray) => { //then we set a parameter to hold the NEW data (ie our case objects)...when does that parameter take an argument? Right now on the next line...
-          setCases(caseArray) //...and here is where we feed the caseArray parameter its argument by saying "set these cases (that we fetched 3 lines above) as the new value of our "cases" variable on line 7". 
-          console.log(caseArray)
-        })
-
-        fetch(`http://localhost:8080/adjusters?_expand=user`) //we added the adjuster object for each user here
-        .then(response => response.json())
-        .then((data) => {
-          const adjusterArray = data.filter(case1 => !case1.user.isManager); //this gives us an array of adjuster only, no managers
-          setAdjusters(adjusterArray)
-          console.log(adjusterArray)
-        })
+      getCasesAndAdjusters()
     },
     []
   )
@@ -144,126 +146,234 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
   )
 
 
-//Use the selected adjuster's ID to filter the cases and display only the cases for that adjuster:
-useEffect(() => {
-  if (selectedAdjusterId) {
-    const filteredCasesByAdjuster = cases.filter(
-      (case1) => case1.userId === selectedAdjusterId
-    );
-    setFilteredCases(filteredCasesByAdjuster);
-  } else {
-    setFilteredCases(cases);
+  //Use the selected adjuster's ID to filter the cases and display only the cases for that adjuster:
+  useEffect(() => {
+    if (selectedAdjusterId) {
+      const filteredCasesByAdjuster = cases.filter(
+        (case1) => case1.userId === selectedAdjusterId
+      );
+      setFilteredCases(filteredCasesByAdjuster);
+    } else {
+      setFilteredCases(cases);
+    }
+  }, [selectedAdjusterId, cases]);
+
+
+  // for the onChange below to show all cases matching that adjuster
+  const handleFilterCases = (e) => {
+    const c = cases.filter((case1) => {
+      return case1.userId === parseInt(e.target.value) //returns where ever this condition is true, meaning whenever the userId of a case in the cases array matches the userId of the selected adjuster from the dropdown menu, that case gets added to the array contained in the c variable
+    })
+    setFilteredCases(c)
   }
-}, [selectedAdjusterId, cases]);
+  // console.log(filteredCases, "filteredCases")
+
+  // for the onChange below to update the assigned adjuster's userId
+  // mapping runs a function on any matching case....and when the user selects an adjuster name, we need to grab the caseId of the current case AND the userId of the current case and compare it to the cases in our case array.
+  
+//   const handleReassignAdjuster = (newUserId, e) => { //chatGPT: "It takes two arguments: newUserId, which is the ID of the new adjuster being assigned, and e, which is the event object from the <select> element's onChange event."
+//     // when the adjuster name is selected from the dropdown, the case's userId should change to the current user's Id
+//     const updatedCases = cases.map((case1) => { //this function does two things: 1. it maps over and performs a function for each case that 
+//       if (case1.userId === parseInt(e.target.value)) {
+//         // Update the case on the server using the PATCH method
+//         // return { ...case1, userId: newUserId, }; //...then take that case and create a new case object and update the userId value to the clicked adjuster's userId value...
+      
+//       // console.log(e.target.value)
+//       fetch(`http://localhost:3000/cases/${case1.id}`, { //...then fetch all cases with that case id
+//         method: 'PATCH', //...and patch the current userId with the newUserId (which should be the userId of the adjuster that was selected)
+//         headers: {
+//           "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({
+//           userId: newUserId,
+//         })
+//       })
+//         .then(response => response.json())
+//         .then((json) => console.log(json));
+//         return { ...case1, userId: newUserId }; // Update the userId in the case locally
+//     }
+
+//     return case1; //otherwise, if the statement above is false, just return the cases untouched
+//   });
+//     setFilteredCases(updatedCases)
+// }
 
 
-// for the onChange below
-const handleFilterCases = (e) => {
-  const c = cases.filter((case1) => {              
-    return case1.userId === parseInt(e.target.value)
-  })
-  setFilteredCases(c)
-}
-console.log(filteredCases, "filteredCases")
-
-  useEffect( //...while observing closedCasesOnly, if there is any user input that changes the value of closedCasesOnly, 
-    () => {
-      if (closedCasesOnly) {
-        const closedCaseArray = cases.filter(case1 => { //filter through all cases and return cases that match the userId AND where dateCaseClosed is not an empty string
-          return case1.userId === caseUserObject.id && case1.dateCaseClosed !== "" //this says return all cases for the current user AND where the dateCaseClosed property does NOT have an empty string (ie - if a date is placed in that value field then it's a closed case....so when we click closed cases button those are the cases that will show)
+  const handleReassignAdjuster = (e) => {
+    const [newUserId, caseId] = e.target.value.split("--") //split returns the two values
+    return fetch(`http://localhost:8080/cases/${parseInt(caseId)}`, { //...then fetch all cases with that case id
+        method: 'PATCH', //...and patch the current userId with the newUserId (which should be the userId of the adjuster that was selected)
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: parseInt(newUserId),
         })
-        setFilteredCases(closedCaseArray) // set the closedCasesOnly variable to show only those cases that are closed
-      }
-      else {
-        const openCaseArray = cases.filter(case1 => {
-          return case1.userId === caseUserObject.id && case1.dateCaseClosed === ""
-        })
-        setFilteredCases(openCaseArray)
-      }
-    },
-    [closedCasesOnly, cases] // we will observe this variable for any changes by the user...
+      })
+      .then(() => {getCasesAndAdjusters()});
+  }
 
-  )
+  
 
 
-  // const handleButtonClick = () => {
-  //   if (setReservesSubmitted(true) && ) {
-  //     setReservesSubmitted("")
-  //   } else {
+useEffect( //...while observing closedCasesOnly, if there is any user input that changes the value of closedCasesOnly, 
+  () => {
+    if (closedCasesOnly) {
+      const closedCaseArray = cases.filter(case1 => { //filter through all cases and return cases that match the userId AND where dateCaseClosed is not an empty string
+        return case1.userId === caseUserObject.id && case1.dateCaseClosed !== "" //this says return all cases for the current user AND where the dateCaseClosed property does NOT have an empty string (ie - if a date is placed in that value field then it's a closed case....so when we click closed cases button those are the cases that will show)
+      })
+      setFilteredCases(closedCaseArray) // set the closedCasesOnly variable to show only those cases that are closed
+    }
+    else {
+      const openCaseArray = cases.filter(case1 => {
+        return case1.userId === caseUserObject.id && case1.dateCaseClosed === ""
+      })
+      setFilteredCases(openCaseArray)
+    }
+  },
+  [closedCasesOnly, cases] // we will observe this variable for any changes by the user...
 
-  //   }
-  //   ;
-  //   setFilteredCases(cases); // Assuming 'cases' is the data you want to set for filteredCases
-  // };
+)
 
-  //! PROBLEM - The page isn't showing the list of cases when I click on the case list. I am logged in as an Adjuster, so it should display.
-  //^ SOLUTION - Even though we have fetched the data and stored it in "cases" variable, we have not rendered it to the DOM (displayed it in the browser) until we return this whole function we are still writing. So, let's return the jsx (html in react). Important to note: we will actually render this data by exporting this whole function to another module later on. 
-  //Note that curly braces after the initial article tag is actually #interpolation (like we did to insert data inside html), except we don't need the $ before curly braces...and this is jsx, not technically html.
-  //? I don't know why Steve's worked on honey-rae's "Filtered State DependingOn User Type" when he did NOT update to the map method on filteredTickets instead of just tickets
-  //? I also don't know why Steve's did not alert him of missing dependencies like mine did when my localCaseUser and caseUserObject were outside of the second useEffect()
-  //&Stretch goal: for the h2, I would like to interpolate a conditional Manager List of Cases or "Adjuster List of Cases"
-  return <>
 
-    { //below says if the logged-in user is a manager, then display these two buttons and call the setReservesSubmitted function. The "No Reserves Yet" button displays all cases where the boolean is false (ie, whether reservesSubmitted value is false)...and "Show All Cases" button displays all cases
-      caseUserObject.manager 
-        ? <>
+const handleGoBackButtonClick = () => {
+  navigate(`/cases`); // navigates back to the list of cases for the current user.
+  //*another option for navigating back one page is navigate(-1)
+};
+
+// const handleButtonClick = () => {
+//   if (setReservesSubmitted(true) && ) {
+//     setReservesSubmitted("")
+//   } else {
+
+//   }
+//   ;
+//   setFilteredCases(cases); // Assuming 'cases' is the data you want to set for filteredCases
+// };
+
+//! PROBLEM - The page isn't showing the list of cases when I click on the case list. I am logged in as an Adjuster, so it should display.
+//^ SOLUTION - Even though we have fetched the data and stored it in "cases" variable, we have not rendered it to the DOM (displayed it in the browser) until we return this whole function we are still writing. So, let's return the jsx (html in react). Important to note: we will actually render this data by exporting this whole function to another module later on. 
+//Note that curly braces after the initial article tag is actually #interpolation (like we did to insert data inside html), except we don't need the $ before curly braces...and this is jsx, not technically html.
+//? I don't know why Steve's worked on honey-rae's "Filtered State DependingOn User Type" when he did NOT update to the map method on filteredTickets instead of just tickets
+//? I also don't know why Steve's did not alert him of missing dependencies like mine did when my localCaseUser and caseUserObject were outside of the second useEffect()
+//&Stretch goal: for the h2, I would like to interpolate a conditional Manager List of Cases or "Adjuster List of Cases"
+return <>
+  <h2>List of Cases</h2>
+
+
+
+
+
+  { //below says if the logged-in user is a manager, then display these two buttons and call the setReservesSubmitted function. The "No Reserves Yet" button displays all cases where the boolean is false (ie, whether reservesSubmitted value is false)...and "Show All Cases" button displays all cases
+    caseUserObject.manager
+      ?
+      <>
         {
           // <select value={selectedAdjusterId} onChange={(e) => setSelectedAdjusterId(e.target.value)}>
           // what does it do setting defaultValue to default? the defaultValue is an ATTRIBUTE. It is used to set a default value for an input element or a component. In this case we are using defaultValue on a select element. When you use defaultValue="default" on an input element (including a select element i think), it means that the initial value of the input will be set to "default" when the component is rendered.
           <select defaultValue="default"
-          onChange={ handleFilterCases }
+            onChange={handleFilterCases}
           >
-            <option value="default" hidden>All Adjusters</option>
+            <option value="default">All Adjusters</option> {/*To hide the first named thing on the dropdown (which is the phrase All Adjusters", i can place the word hidden after the word "default"*/}
             {adjusters.map((case1) => ( //for each case, render an option that displays the full name associated with that case
-               (<option key={case1.id} value={case1.userId}>
-                    {case1.user.fullName}
-                </option>)
+              (<option key={case1.id} value={case1.userId}>
+                {case1.user.fullName}
+              </option>)
             ))}
           </select>
         }
-          {/* <button onClick={() => setReservesSubmitted (false)} >Reserves Incomplete</button> */}
-          <button onClick={() => setReservesSubmitted(prevState => !prevState)}>Toggle Reserves</button>
-          {/* <button onClick={() => handleButtonClick}>All Reserves</button> */}
-          <button onClick={() => setFilteredCases(cases)} >All Adjusters' Cases</button>
-        </>
+        {/* <button onClick={() => setReservesSubmitted (false)} >Reserves Incomplete</button> */}
+        <button onClick={() => setReservesSubmitted(prevState => !prevState)}>Toggle Reserves</button>
+        {/* <button onClick={() => handleButtonClick}>All Reserves</button> */}
+        <button onClick={() => setFilteredCases(cases)} >All Adjusters' Cases</button>
 
-        :
+        <article className="cases">
+          {
+            filteredCases.map(
+              (case1) => {
+                //when the Case Number link (below) is clicked, it is routed by the AdjusterViews module to the CaseDetails page for that specific case.
+                return (
 
-        <>
-          <button onClick={() => navigate("/case/create")} className="new-case-button">Create New Case</button>
-          <br></br>
-          <br></br>
-          <div>
-            <button onClick={() => setClosedCasesOnly(false)}>My Open Cases</button>
-            <button onClick={() => setClosedCasesOnly(true)}>My Closed Cases</button>
-            <button onClick={() => setMyCases(myCases)}>All My Cases</button>
-          </div>
-          {/* <button onClick={() => navigate("/case/contact")}>Contacts</button>
-        <button onClick={() => navigate("/case/resources")}>Resources</button> */}
-        </>
-    }
-    <h2>List of Cases</h2>
-
-    <article className="cases">
-      {
-        filteredCases.map(
-          (case1) => {
-            //when the Case Number link (below) is clicked, it is routed by the AdjusterViews module to the CaseDetails page for that specific case.
-            return (
-
-              <section className="case" key={`case--${case1.id}`}>
-                <h4><Link to={`http://localhost:3000/cases/${case1.id}`}>Case Number: {case1.caseNumber}</Link></h4>
-                <div>Plaintiff Name: {case1.plaintiffName}</div>
-                <div>Claim Number: {case1.claimNumber}</div>
-                <div>Reserves Submitted?{case1.reservesSubmitted ? "✅" : "🚨"}</div>
-                <div>Adjuster: {case1?.user?.fullName}</div>
-                <div>Case Closed? {case1.dateCaseClosed}</div>
-              </section>
+                  <section className="case" key={`case--${case1.id}`}>
+                    <h4>Case Number: {case1.caseNumber}</h4>
+                    <div>Plaintiff Name: {case1.plaintiffName}</div>
+                    <div>Claim Number: {case1.claimNumber}</div>
+                    <div>Reserves Submitted?{case1.reservesSubmitted ? "✅" : "🚨"}</div>
+                    <div>Adjuster: {case1?.user?.fullName}</div>
+                    <div>Case Closed? {case1.dateCaseClosed}</div>
+                    <br></br>
+                    {/* <Link to={`http://localhost:3000/cases/${case1.id}`}>
+                        <button>Reassign Case</button></Link> */}
+                    <div>
+                      <select
+                        value={selectedAdjusterId}
+                        onChange={handleReassignAdjuster}
+                      >
+                        <option value="">Reassign Adjuster</option> {/*To hide the first named thing on the dropdown (which is the phrase All Adjusters", i can place the word hidden after the word "default"*/}
+                        {adjusters.map((adjuster) => ( //for each case, render an option that displays the full name associated with that case
+                          (<option key={`${adjuster.id}`} value={`${adjuster.userId}--${case1.id}`}>
+                            {adjuster.user.fullName}
+                          </option>)
+                        ))}
+                      </select>
+                    </div>
+                    <br></br>
+                    <div>
+                    <Link to={`http://localhost:3000/cases/${case1.id}`}>
+                        <button>View Case Details</button></Link>
+                    </div>
+                  </section>
+                )
+              }
             )
           }
-        )
-      }
-    </article>
-  </>
+        </article>
+
+      </>
+
+      :
+
+      <>
+        <button onClick={() => navigate("/case/create")} className="new-case-button">Create New Case</button>
+        <br></br>
+        <br></br>
+        <div>
+          <button onClick={() => setClosedCasesOnly(false)}>My Open Cases</button>
+          <button onClick={() => setClosedCasesOnly(true)}>My Closed Cases</button>
+          <button onClick={() => setMyCases(myCases)}>All My Cases</button>
+        </div>
+        {/* <button onClick={() => navigate("/case/contact")}>Contacts</button>
+        <button onClick={() => navigate("/case/resources")}>Resources</button> */}
+
+        <article className="cases">
+          {
+            filteredCases.map(
+              (case1) => {
+                //when the Case Number link (below) is clicked, it is routed by the AdjusterViews module to the CaseDetails page for that specific case.
+                return (
+
+                  <section className="case" key={`case--${case1.id}`}>
+                    <h4>Case Number: {case1.caseNumber}</h4>
+                    <div>Plaintiff Name: {case1.plaintiffName}</div>
+                    <div>Claim Number: {case1.claimNumber}</div>
+                    <div>Reserves Submitted?{case1.reservesSubmitted ? "✅" : "🚨"}</div>
+                    <div>Adjuster: {case1?.user?.fullName}</div>
+                    <div>Case Closed? {case1.dateCaseClosed}</div>
+                    <br></br>
+                    <Link to={`http://localhost:3000/cases/${case1.id}`}>
+                      <button>Edit</button></Link>
+                  </section>
+                )
+              }
+            )
+          }
+        </article>
+
+
+
+      </>
+  }
+
+</>
 };
 

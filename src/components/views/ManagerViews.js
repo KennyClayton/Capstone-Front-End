@@ -1,6 +1,7 @@
 import { CaseList } from "../cases/CaseList.js"
 import { CaseSearch } from "../cases/CaseSearch.js"
 import { CreateCaseForm } from "../cases/CreateCaseForm.js"
+import { CaseDetails } from "../cases/CaseDetails.js"
 import CaseTrackerLogo from "../auth/casetracker-5000-7-30-2023 (1).png"
 import "./ApplicationViews.css"
 import { CaseContainer } from "../cases/CaseContainer.js"
@@ -31,7 +32,18 @@ export const ManagerViews = () => {
 					<Route path="contacts" element={<Contacts />} />
 					<Route path="case1001" element={<case1001 />} /> */}
 
+				<Route path="/cases/:caseId" element={	
+					<>
+					<img className="sizeDownLogo" src={CaseTrackerLogo} alt="Logo" />
+					<div className="subtitle-casetracker5000">Track Daily. Report <span className="title--main--span">Instantly.</span></div>
+					<CaseDetails />
+					</>
+				} 
+				/>
+			
+			
 			</Routes>
+			
 		</>
 	)
 }
