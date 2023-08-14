@@ -340,7 +340,7 @@ return <>
         <div>
           <button onClick={() => setClosedCasesOnly(false)}>My Open Cases</button>
           <button onClick={() => setClosedCasesOnly(true)}>My Closed Cases</button>
-          <button onClick={() => setMyCases(myCases)}>All My Cases</button>
+          {/* <button onClick={() => setMyCases(myCases)}>All My Cases</button> */}
         </div>
         {/* <button onClick={() => navigate("/case/contact")}>Contacts</button>
         <button onClick={() => navigate("/case/resources")}>Resources</button> */}

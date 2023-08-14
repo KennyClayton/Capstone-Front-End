@@ -127,7 +127,6 @@ export const CreateCaseForm = () => {
                     <label htmlFor="description">Claim Event Name:</label>
                     <select
                         required 
-                        autoFocus
                         className="form-control"                        
                         value={case1.claimEventName}
                         onChange={(evt) => {
@@ -145,7 +144,7 @@ export const CreateCaseForm = () => {
                       
                     <label htmlFor="description">Plaintiff Name:</label>
                     <input
-                        required autoFocus
+                        required 
                         type="text"
                         className="form-control"
                         placeholder="First Name and Last Name"
@@ -159,7 +158,7 @@ export const CreateCaseForm = () => {
                         } /> <br></br>
                     <label htmlFor="description">Claim Number:</label>
                     <input
-                        required autoFocus
+                        required 
                         type="text"
                         className="form-control"
                         placeholder="6-digit number"
@@ -235,7 +234,7 @@ export const CreateCaseForm = () => {
 
                     <label htmlFor="description">Notes:</label>
                     <input
-                        required autoFocus
+                        required 
                         type="text"
                         className="form-control"
                         placeholder="Additional notes..."
