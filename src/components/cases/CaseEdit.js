@@ -82,7 +82,7 @@ export const CaseEdit = () => {
             </div>
 
             <div>
-                <label htmlFor="name">Case Closed?</label>
+                {/* <label htmlFor="name">Case Closed?</label>
                 <input
                     type="checkbox"
                     value={case1.dateCaseClosed}
@@ -92,8 +92,8 @@ export const CaseEdit = () => {
                             copy.dateCaseClosed = evt.target.checked
                             setCase1(copy)
                         }
-                    }
-                />
+                    } */}
+                {/* /> */}
                 <label htmlFor="description">Case Closed Date</label>
                     <input
                         required autoFocus

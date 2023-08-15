@@ -46,6 +46,7 @@ export const CaseDetails = () => {
   };
 
   const handleGoBackButtonClick = () => {
+
     navigate(`/cases`); // navigates back to the list of cases for the current user.
     //*another option for navigating back one page is navigate(-1)
   };
@@ -109,7 +110,7 @@ export const CaseDetails = () => {
         </>
         :
         <>
-          <div>
+          <div className="case_details_list"> 
             <h2>Case Details</h2>
             <div>Case Number:{caseDetails.caseNumber}</div>
             <div>Claim Event Name: {caseDetails.claimEventName}</div>
@@ -137,17 +138,21 @@ export const CaseDetails = () => {
             <br></br>
           </div>
 
+          <div className="case_details_button_container">
+
+            <button onClick={handleEditButtonClick} className="case_details_edit_button">
+              Edit Case
+            </button>
+
+            <button onClick={handleGoBackButtonClick} className="case_details_back_button">
+              Back to My Cases
+            </button>
+          </div>
           <div>
-            <button onClick={handleCaseDelete}>
+            <button onClick={handleCaseDelete} className="case_details_delete_button">
               Delete Case
             </button>
 
-            <button onClick={handleEditButtonClick}>
-              Edit Case
-            </button>
-            <button onClick={handleGoBackButtonClick}>
-              Back to My Cases
-            </button>
           </div>
         </>
     }

@@ -14,7 +14,7 @@ export const CaseContainer = () => {
 
         <br></br>
         
-        <CaseSearch setterFunction={setSearchTerms} /> 
+        {/* <CaseSearch setterFunction={setSearchTerms} />  */}
         
         <br></br>
         

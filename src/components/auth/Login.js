@@ -23,7 +23,7 @@ export const Login = () => {
                         manager: user.isManager
                     }))
 
-                    navigate("/")
+                    navigate("/cases")
                 }
                 else {
                     window.alert("Invalid login")

@@ -210,7 +210,10 @@ export const CaseList = ({ searchTermState }) => { //initially set the "cases" v
           userId: parseInt(newUserId),
         })
       })
-      .then(() => {getCasesAndAdjusters()});
+      .then(() => {getCasesAndAdjusters()},
+      window.alert('Reassignment was successful!')
+      );
+      
   }
 
   
@@ -361,7 +364,7 @@ return <>
                     <div>Case Closed? {case1.dateCaseClosed}</div>
                     <br></br>
                     <Link to={`http://localhost:3000/cases/${case1.id}`}>
-                      <button>Edit</button></Link>
+                      <button>Case Details</button></Link>
                   </section>
                 )
               }

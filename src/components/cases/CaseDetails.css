@@ -1,42 +1,88 @@
 .cases {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    max-width: 1300px;
-    justify-content: space-around;
-    /* align-content: space-around; */
-    align-items: flex-start;
-    padding-left: 2rem;
-    margin: 2rem;
-
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  max-width: 1300px;
+  justify-content: space-around;
+  /* align-content: space-around; */
+  align-items: flex-start;
+  padding-left: 2rem;
+  margin: 2rem;
 }
 
 .case {
-    background-color: khaki;
-    border: 1px solid rgb(83, 67, 67);
-    padding: 0.7rem;
-    margin: .5rem 0;
-    width: 275px;
-    
+  background-color: khaki;
+  border: 1px solid rgb(83, 67, 67);
+  padding: 0.7rem;
+  margin: 0.5rem 0;
+  width: 275px;
 }
 
 .case:hover {
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.35) ;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.35);
 }
 
 .case_close {
-    margin-left: auto;
-    background-color: #564138;
+  margin-left: auto;
+  background-color: #564138;
 }
 
 .case_delete {
-    margin-left: auto;
-    background-color: #564138;
+  margin-left: auto;
+  background-color: #564138;
 }
 
 .case-categories {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    color: black;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+}
+
+.case_details_button_container {
+  display: flex;
+}
+
+.case_details_edit_button {
+  flex: 1;
+  background-color: khaki;
+  color: #7d3d09;
+  min-width: 100px;
+  max-width: 150px;
+  margin-right: 10px;
+}
+
+.case_details_edit_button:hover {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.case_details_back_button {
+  flex: 1;
+  background-color: khaki;
+  color: #7d3d09;
+  min-width: 100px;
+  max-width: 150px;
+  margin-right: 10px;
+}
+.case_details_back_button:hover {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.case_details_delete_button {
+  flex: 1;
+  background-color: indianred;
+  color: white;
+  min-width: 310px;
+  max-width: 310px;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.case_details_delete_button:hover {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.case_details_list {
+    font-family:Arial, Helvetica, sans-serif
 }
