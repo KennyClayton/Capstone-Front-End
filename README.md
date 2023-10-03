@@ -1,3 +1,9 @@
+What?
+This is a simple app that I developed with the goal of exploring a single source of truth approach to working on insurance claims and cases. Tracking and reporting would become easier and instantaneous. 
+
+Why?
+As an adjuster, I wanted to help homeowners. But claims systems and processes sometimes got in the way. Tasks that a claims system could be doing with fewer errors were being handled manually. Processes constantly changed. Forms (and work...and errors) increased. And much of the claim's burden (in many ways) shifted to the customer. We put mankind on the moon in 1969, but adjusters are still manually entering the same information multiple times in 2023. I want to be part of making the adjuster's experience as easy and simple as possible and help improve the customer experience. 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
